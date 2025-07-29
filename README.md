@@ -108,3 +108,54 @@ Notes
     The bot stores calculations per user, so multiple people can use it simultaneously.
 
     Use !stats help for a full breakdown of parameters and examples.
+
+
+
+
+
+
+
+INVENTORY SYSTEM 
+
+
+
+Commands:
+
+    /inventory [character] - View a character's inventory
+
+    /add_item - Add items to a character:
+    text
+
+    /add_item character:"Aric" item_name:"Iron Sword" item_type:"weapon" damage:15
+    /add_item character:"Liana" item_name:"Health Potion" item_type:"potion" quantity:3
+    /add_item character:"Aric" item_name:"Steel Armor" item_type:"armor" defense:20 slot:"chest"
+
+    /equip [character] [item_name] - Equip an item
+
+    /use_potion [character] [potion_name] - Use a potion
+
+Features:
+
+    Persistent storage (saves to JSON file)
+
+    Beautiful embed displays
+
+    Error handling
+
+    Autocomplete for commands
+
+    Supports weapons, armor, and potions
+
+Example Session:
+text
+
+    /add_item character:"Aric" item_name:"Dragon Slayer" item_type:"weapon" damage:25
+    ✅ Added Dragon Slayer to inventory
+
+    /equip character:"Aric" item_name:"Dragon Slayer"
+    🛡️ Equipped Dragon Slayer in weapon slot
+
+    /inventory character:"Aric"
+    [Shows beautiful embed with equipped items and inventory]
+
+The bot handles all inventory management through Discord slash commands and automatically saves all changes between restarts. The code is organized, error-free, and ready to integrate with your existing Janus Penthos bot.

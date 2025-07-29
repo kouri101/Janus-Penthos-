@@ -1,4 +1,50 @@
-    Basic Commands: Discord 
+
+    AUTO BATTLE 
+    How to Use:
+
+    Create a Character:
+    text
+
+/create_character name:"Aric"
+
+Check Character Info:
+text
+
+/character_info name:"Aric"
+
+Start a Battle:
+text
+
+/autobattle character:"Aric"
+
+Example Battle Output:
+text
+
+⚔️ Aric vs Level 5 Goblin
+Turn 1: Aric hits Goblin for 12 damage
+Goblin hits Aric for 8 damage
+Turn 2: Aric hits Goblin for 24 damage (CRIT!)
+🏆 Victory! Aric defeated the Goblin!
+
+✨ Gained 45 EXP and 25 gold!
+🔹 EXP: 45/100
+Battles today: 1/10 | Next battle: now
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   Basic Commands: Discord 
 
         !character - View your character sheet
 

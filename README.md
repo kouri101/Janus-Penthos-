@@ -1,4 +1,33 @@
 
+COMMANDS CHARACTER GROWTH 
+        !create - Make a new character
+
+        !addexp <amount> - Add experience points
+
+        !allocate - Distribute status points
+
+        !equip - Edit equipment
+
+        !stats - Show character stats
+
+        !save - Save your character
+
+        !load - Load your character
+
+        !delete - Delete your character
+
+The bot will create a characters/ directory to store all character data as JSON files.
+
+
+
+
+
+
+
+
+
+
+
     AUTO BATTLE 
     How to Use:
 

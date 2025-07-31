@@ -233,7 +233,7 @@ async def simulate_battle(player: Player, ctx: commands.Context) -> bool:
             for item, quantity in drops:
                 player.add_to_inventory(item, quantity)
     else:
-        embed.add_field(name="Defeat", value="You were defeated in battle but managed to run!", inline=False)
+        embed.add_field(name="Defeat", value="You were defeated in battle but managed to run away!", inline=False)
     
     await ctx.send(embed=embed)
     return player.alive
@@ -245,7 +245,7 @@ async def daily_auto_battle(ctx: commands.Context):
     cooldown_remaining = player.check_cooldown()
     
     if not player.alive:
-        await ctx.send("You're defeated but managed to run away! Use `!rest` to recover before battling again.")
+        await ctx.send("You're almost going to die but with a bit of luck by your side you managed to escape away! Use `!rest` to recover before battling again.")
         return
     
     if not player.cooldown_complete:
@@ -263,7 +263,7 @@ async def daily_auto_battle(ctx: commands.Context):
     
     embed = discord.Embed(
         title="Starting Daily Auto-Battles",
-        description=f"{ctx.author.display_name} engages in 10 battles...",
+        description=f"{ctx.author.display_name} engages in 10 battles Good Luck!...",
         color=discord.Color.green()
     )
     await ctx.send(embed=embed)

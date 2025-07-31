@@ -1,4 +1,35 @@
 
+Monster Encouter 
+Commands:
+For discord
+
+    !start - Create a new character
+
+    !stats - Show your character stats
+
+    !explore - Find a monster to fight
+
+    !inventory - Show your inventory
+
+    !skills - Show your available skills
+
+    !attack - Attack in combat
+
+    !skill <number> - Use a skill in combat
+
+    !flee - Attempt to flee from combat
+
+    !save - Save your game
+
+    !load - Load your saved game
+
+
+
+
+
+
+
+
 COMMANDS CHARACTER GROWTH 
         !create - Make a new character
 

@@ -19,6 +19,7 @@ class Element(Enum):
     DARK = auto()
     ICE = auto()
     LIGHTNING = auto()
+    POISON = auto()
 
 class StatusEffect:
     def __init__(self, name: str, duration: int):
@@ -62,13 +63,22 @@ class BleedStatus(StatusEffect):
         target.current_hp -= self.damage
         return f"{target.name} bleeds for {self.damage} damage!"
 
+class PoisonStatus(StatusEffect):
+    def __init__(self, damage: int):
+        super().__init__("Poisoned", 10)
+        self.damage = damage
+        
+    def apply_effect(self, target: Any) -> None:
+        target.current_hp -= self.damage
+        return f"{target.name} takes {self.damage} poison damage!"
+
 # ---------------------------
 # Game Components (keep these mostly the same, just modify print statements to return strings)
 # ---------------------------
 class Inventory:
     def __init__(self):
         self.items: Dict[str, int] = {}
-        self.capacity = 20
+        self.capacity = 10
     
     def add_item(self, item_name: str, quantity: int = 1) -> Tuple[bool, str]:
         if item_name in self.items:
@@ -139,7 +149,7 @@ class Character:
         self.inventory = Inventory()
         self.status_effects: List[StatusEffect] = []
         self.skills = [
-            Skill("Power Strike", 1.5, mp_cost=5, description="Basic attack"),
+            Skill("Power Slap", 1.5, mp_cost=2, description="Basic attack"),
             Skill("Fireball", 1.8, Element.FIRE, mp_cost=10, description="Fire damage"),
             Skill("Heal", 0.5, healing=True, mp_cost=15, description="Restores HP"),
             Skill("Ice Shard", 1.6, Element.ICE, mp_cost=8, description="Ice damage"),
@@ -553,6 +563,8 @@ class RPGBot(commands.Bot):
             ("Goblin Archer", 10),
             ("Goblin Thief", 10),
             ("Goblin Shaman", 5)
+            ("Kazu's Corrupted Clone", 20),
+            ("Poison Jelly", 20),
         ]
         
         available_monsters = []
@@ -756,5 +768,5 @@ class RPGBot(commands.Bot):
 
 # Run the bot
 if __name__ == "__main__":
-    bot = RPGBot()
+    bot = JanusPenthos()
     bot.run("YOUR_DISCORD_BOT_TOKEN")  # Replace with your actual bot token

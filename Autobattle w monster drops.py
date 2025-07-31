@@ -245,7 +245,7 @@ async def daily_auto_battle(ctx: commands.Context):
     cooldown_remaining = player.check_cooldown()
     
     if not player.alive:
-        await ctx.send("You're defeated! Use `!rest` to recover before battling again.")
+        await ctx.send("You're defeated but managed to run away! Use `!rest` to recover before battling again.")
         return
     
     if not player.cooldown_complete:

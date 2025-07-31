@@ -1,6 +1,7 @@
 
 Autobattle 0.4.1
 COMMANDS
+
         !battle  "Start your daily auto-battles (10 max with 24h cooldown)
         !profile "View your character profile
         !inventory "Check your inventory

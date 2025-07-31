@@ -295,7 +295,7 @@ async def daily_auto_battle(ctx: commands.Context):
     embed.add_field(name="Kills/Deaths", value=f"{player.kills}/{player.deaths}", inline=True)
     
     if not player.alive:
-        embed.add_field(name="Status", value="You died in battle! Use `!rest` to recover.", inline=False)
+        embed.add_field(name="Status", value="You almost died in battle but managed to run away! Use `!rest` to recover.", inline=False)
     
     await ctx.send(embed=embed)
     save_data()

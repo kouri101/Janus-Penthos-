@@ -212,93 +212,181 @@ class Character:
 # Monster Class (modified for Discord)
 # ---------------------------
 class Monster:
-    def __init__(self, name: str, level: int, hp_range: Tuple[int, int], 
-                 atk_range: Tuple[int, int], speed_range: Tuple[int, int], 
-                 element: Element = Element.NONE):
+    def __init__(self, name: str, level: int):
         self.name = name
         self.level = level
-        self.max_hp = random.randint(*hp_range)
-        self.current_hp = self.max_hp
-        self.atk = random.randint(*atk_range)
-        self.defense = 3 + level
-        self.speed = random.randint(*speed_range)
+        self.set_stats()
         self.exp_reward = self.calculate_exp_reward()
-        self.element = element
         self.status_effects: List[StatusEffect] = []
-        self.spawn_counter = 0
-        self.hit_counter = 0
-        self.loot_table = self.create_loot_table()
-    
-    # ... (keep all the existing methods, but modify print statements to return strings)
-    
-    def add_status(self, status: StatusEffect) -> str:
-        self.status_effects.append(status)
-        effect_msg = status.apply_effect(self)
-        return effect_msg if effect_msg else f"{self.name} is now {status.name.lower()}!"
-    
-    def remove_status(self, status: StatusEffect) -> str:
-        if status in self.status_effects:
-            self.status_effects.remove(status)
-            return f"{self.name} is no longer {status.name.lower()}!"
-        return ""
-    
-    def update_statuses(self) -> List[str]:
-        messages = []
-        for status in self.status_effects[:]:
-            status.update(self)
-            if status.duration <= 0:
-                msg = self.remove_status(status)
-                if msg:
-                    messages.append(msg)
-        return messages
-    
-    def show_stats(self) -> str:
-        stats_str = f"\n{self.name} (Lv. {self.level})"
-        stats_str += f"\nHP: {self.current_hp}/{self.max_hp}"
-        stats_str += f"\nATK: {self.atk}"
-        stats_str += f"\nDEF: {self.defense}"
-        stats_str += f"\nSpeed: {self.speed}"
-        stats_str += f"\nElement: {self.element.name}"
         
-        if self.status_effects:
-            stats_str += "\nStatus Effects:"
-            for status in self.status_effects:
-                stats_str += f"\n- {status.name} ({status.duration} turns)"
-        return stats_str
-    
-    def attack_effect(self, target: Any) -> List[str]:
-        messages = []
-        self.hit_counter += 1
-        
-        if "Pyro" in self.name and self.hit_counter >= 2:
-            burn_dmg = max(1, self.level * 2)
-            msg = target.add_status(BurnStatus(burn_dmg))
-            messages.append(msg)
-            self.hit_counter = 0
-        
-        elif "Hydro" in self.name and self.hit_counter >= 1:
-            msg = target.add_status(WetStatus())
-            messages.append(msg)
-            self.hit_counter = 0
+    def set_stats(self):
+        """Set monster stats based on type and level"""
+        if "Slime" in self.name:
+            self.max_hp = 50 + (self.level * 20)
+            self.atk = 5 + (self.level * 2)
+            self.defense = 3 + self.level
+            self.speed = 5 + self.level
+            self.element = Element.NONE
+        elif "Jelly" in self.name:
+            self.max_hp = 70 + (self.level * 25)
+            self.atk = 8 + (self.level * 3)
+            self.defense = 5 + self.level
+            self.speed = 7 + self.level
+            self.element = Element.NONE
+        elif "Goblin" in self.name:
+            self.max_hp = 100 + (self.level * 30)
+            self.atk = 15 + (self.level * 4)
+            self.defense = 8 + self.level
+            self.speed = 10 + self.level
+            self.element = Element.NONE
             
-            if self.level >= 3:
-                messages.append(f"{self.name} attempts to engulf {target.name}!")
-                if random.random() < 0.3:
-                    msg = target.add_status(FrozenStatus())
-                    messages.append(msg)
+        self.current_hp = self.max_hp
+    
+    def calculate_exp_reward(self) -> int:
+        """Calculate EXP based on monster type and level"""
+        if "Slime" in self.name:
+            if self.level == 1: return 10
+            if self.level == 2: return 20
+            if self.level == 3: return 25
+        elif "Acid Slime" in self.name or "Poison Slime" in self.name:
+            if self.level == 2: return 15
+            if self.level == 3: return 25
+        elif "Pyro Slime" in self.name or "Cryo Slime" in self.name or "Hydro Slime" in self.name or "Geo Slime" in self.name or "Dendro Slime" in self.name:
+            if self.level == 2: return 15
+            if self.level == 3: return 25
+        elif "Jelly" in self.name and not any(x in self.name for x in ["Lava", "Sea", "Forest", "Desert", "Swamp", "Iron", "Silver", "Golden", "Diamond", "Lapis", "Emerald"]):
+            if self.level == 2: return 15
+            if self.level == 3: return 25
+        elif "Lava Jelly" in self.name or "Sea Jelly" in self.name or "Forest Jelly" in self.name or "Desert Jelly" in self.name or "Swamp Jelly" in self.name:
+            if self.level == 3: return 20
+            if self.level == 4: return 30
+        elif "Iron Jelly" in self.name or "Silver Jelly" in self.name or "Golden Jelly" in self.name or "Diamond Jelly" in self.name or "Lapis Jelly" in self.name or "Emerald Jelly" in self.name:
+            if self.level == 4: return 30
+            if self.level == 5: return 40
+        elif "Goblin" in self.name:
+            if self.level == 3: return 20
+            if self.level == 4: return 25
+            if self.level == 5: return 30
+            if self.level == 6: return 35
+            if self.level == 7: return 40
+            if self.level == 8: return 45
+            if self.level == 9: return 50
+    
+    def roll_for_loot(self) -> Dict[str, int]:
+        """Roll for loot based on monster type and level"""
+        drops = {}
         
-        elif "Cryo" in self.name and self.hit_counter >= 2:
-            msg = target.add_status(FrozenStatus())
-            messages.append(msg)
-            self.hit_counter = 0
+        # All slimes drop monster essence
+        if "Slime" in self.name:
+            # Monster essence drops
+            if random.random() <= 0.5:
+                if self.level in [1, 2]:
+                    drops["Monster Essence"] = random.randint(1, 6)
+                else:
+                    drops["Monster Essence"] = random.randint(1, 10)
+            
+            # Type-specific drops
+            if random.random() <= 0.5:
+                if self.name == "Slime":
+                    if self.level == 1:
+                        drops["Slime Essence"] = random.randint(1, 3)
+                    else:
+                        drops["Slime Essence"] = random.randint(1, 6)
+                elif self.name == "Acid Slime":
+                    drops["Acidic Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Poison Slime":
+                    drops["Toxic Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Pyro Slime":
+                    drops["Pyro Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Cryo Slime":
+                    drops["Cryo Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Hydro Slime":
+                    drops["Hydro Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Geo Slime":
+                    drops["Geo Slime Essence"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Dendro Slime":
+                    drops["Dendro Seed"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
         
-        elif "Goblin" in self.name and ("Warrior" in self.name or "Thief" in self.name or "Archer" in self.name):
-            if random.random() < 0.2:
-                bleed_dmg = max(1, self.level)
-                msg = target.add_status(BleedStatus(bleed_dmg))
-                messages.append(msg)
+        # Jelly drops
+        elif "Jelly" in self.name:
+            # Monster essence drops
+            if random.random() <= 0.5:
+                if self.level in [2, 3]:
+                    drops["Monster Essence"] = random.randint(1, 6)
+                else:
+                    drops["Monster Essence"] = random.randint(1, 10)
+            
+            # Type-specific drops
+            if random.random() <= 0.5:
+                if self.name == "Jelly":
+                    drops["Pale Gelatin"] = random.randint(1, 3) if self.level == 2 else random.randint(1, 6)
+                elif self.name == "Lava Jelly":
+                    drops["Red Gelatin"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                elif self.name == "Sea Jelly":
+                    drops["Blue Gelatin"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                elif self.name == "Forest Jelly":
+                    drops["Green Gelatin"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                elif self.name == "Desert Jelly":
+                    drops["Orange Gelatin"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                elif self.name == "Swamp Jelly":
+                    drops["Purple Gelatin"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                elif self.name == "Iron Jelly":
+                    drops["Iron Jelly's Fluid"] = random.randint(1, 3) if self.level == 4 else random.randint(1, 6)
+                elif self.name == "Silver Jelly":
+                    drops["Silver Jelly's Fluid"] = random.randint(1, 3) if self.level == 4 else random.randint(1, 6)
+                elif self.name == "Golden Jelly":
+                    drops["Golden Jelly's Fluid"] = random.randint(1, 3) if self.level == 4 else random.randint(1, 6)
+                elif self.name == "Diamond Jelly":
+                    drops["Diamond Jelly's Fluid"] = 1 if self.level == 4 else random.randint(1, 2)
+                elif self.name == "Lapis Jelly":
+                    drops["Lapis Jelly's Fluid"] = 1 if self.level == 4 else random.randint(1, 2)
+                elif self.name == "Emerald Jelly":
+                    drops["Emerald Jelly's Fluid"] = 1 if self.level == 4 else random.randint(1, 2)
         
-        return messages
+        # Goblin drops
+        elif "Goblin" in self.name:
+            # Common drops
+            if "Tank" in self.name or "Warrior" in self.name or "Archer" in self.name or "Thief" in self.name:
+                if random.random() <= 0.3:
+                    drops["Goblin Bones"] = random.randint(1, 6)
+                if random.random() <= 0.3:
+                    drops["Monster Essence"] = random.randint(1, 10)
+                if random.random() <= 0.25:
+                    drops["Goblin Armor"] = 1
+                
+                # Specialized drops
+                if "Tank" in self.name:
+                    if random.random() <= 0.06:
+                        drops["Goblin Shield"] = 1
+                    if random.random() <= 0.06:
+                        drops["Goblin Mace"] = 1
+                elif "Warrior" in self.name:
+                    if random.random() <= 0.06:
+                        drops["Goblin Sword"] = 1
+                    if random.random() <= 0.06:
+                        drops["Goblin Spear"] = 1
+                elif "Archer" in self.name:
+                    if random.random() <= 0.06:
+                        drops["Goblin Bow"] = 1
+                    if random.random() <= 0.06:
+                        drops["Goblin Arrow"] = 1
+                elif "Thief" in self.name:
+                    if random.random() <= 0.06:
+                        drops["Goblin Knife"] = 1
+                    if random.random() <= 0.06:
+                        drops["Goblin Coin Pouch"] = 1
+            else:
+                # Regular goblins
+                if random.random() <= 0.49:
+                    drops["Goblin Bones"] = random.randint(1, 3) if self.level == 3 else random.randint(1, 6)
+                if random.random() <= 0.49:
+                    drops["Monster Essence"] = random.randint(1, 6) if self.level == 3 else random.randint(1, 10)
+            
+            # Rare drop (Bold Gaze)
+            if random.random() <= 0.02 if self.level in [3,4] else 0.03 if self.level in [5,6,7] else 0.04:
+                drops["Bold Gaze"] = 1
+        
+        return drops
 
 # ---------------------------
 # Game Systems (modified for Discord)
@@ -493,7 +581,7 @@ class Combat:
 # ---------------------------
 # Discord Bot Implementation
 # ---------------------------
-class RPGBot(commands.Bot):
+class JanusPenthos(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
@@ -563,8 +651,7 @@ class RPGBot(commands.Bot):
             ("Goblin Archer", 10),
             ("Goblin Thief", 10),
             ("Goblin Shaman", 5)
-            ("Kazu's Corrupted Clone", 20),
-            ("Poison Jelly", 20),
+            
         ]
         
         available_monsters = []

@@ -233,7 +233,7 @@ async def simulate_battle(player: Player, ctx: commands.Context) -> bool:
             for item, quantity in drops:
                 player.add_to_inventory(item, quantity)
     else:
-        embed.add_field(name="Defeat", value="You were defeated in battle!", inline=False)
+        embed.add_field(name="Defeat", value="You were defeated in battle but managed to run!", inline=False)
     
     await ctx.send(embed=embed)
     return player.alive

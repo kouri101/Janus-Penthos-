@@ -1,4 +1,22 @@
 
+Autobattle 0.4.1
+COMMANDS
+        !battle  "Start your daily auto-battles (10 max with 24h cooldown)
+        !profile "View your character profile
+        !inventory "Check your inventory
+        !equip [item] "Equip an item from your inventory
+        !rest" "Heal and reset daily battles (doesn't affect cooldown)
+        !help"  "Show this help message
+
+
+
+
+
+
+
+
+
+
 Monster Encouter 
 Commands:
 For discord
